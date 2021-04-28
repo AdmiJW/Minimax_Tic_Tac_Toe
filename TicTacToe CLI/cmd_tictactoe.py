@@ -7,7 +7,7 @@ state_second_mover_move = {}
 
 # Read the generated states from csv file
 print("Loading Smart Tic Tac Toe AI...")
-with open('states_no_heuristic.csv', 'r', newline='') as csvfile:
+with open('../states_no_heuristic.csv', 'r', newline='') as csvfile:
     reader = csv.DictReader(csvfile)
     for entry in reader:
         state = tuple( map(int, entry['state'][1:-1].split(',') ) )
