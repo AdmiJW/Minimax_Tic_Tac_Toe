@@ -116,6 +116,7 @@ class State:
         choice = random.choice(moves)
 
         self.cpu_board[choice] = -1 if self.isPlayerFirst else 1
+        return choice
 
 
     # Called when a game is set. Sets appropriate states

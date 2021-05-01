@@ -1,4 +1,5 @@
 import tkinter as tk
+import tkinter.messagebox as tkm
 
 import CONST
 
@@ -19,4 +20,7 @@ class GameViewMenuBar(tk.Menu):
                                  command=lambda: controller.changeScreen(CONST.LOC_MAIN_MENU) )
         self.options.add_command(label='Exit', command=lambda: controller.saveBeforeQuit() )
         self.add_cascade(menu=self.options, label='Options')
-        self.add_command(label='About')
+        self.add_command(label='About',
+                         command=lambda: tkm.showinfo("About",
+                                                      "Smart Tic Tac Toe\n"
+                                                      "Created by AdmiJW, April 2021"))

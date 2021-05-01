@@ -33,7 +33,19 @@ Ensure that your machine has python installed, open cmd and run the following:
 
 ### 1.1 - ❌ GUI Tic Tac Toe ⭕️
 
-To be constructed
+GUI tic tac toe built on `Tkinter` module in Python. Dependencies:
+* `pygame`
+* `Pillow`
+* `jsonschema`
+
+The entry point of the program is the `controller.py`. To run the game, run `python controller.py` in the directory (Ensure all dependencies are installed)
+
+#### Features:
+* Save/Load your game
+* 2 Modes: Local Vs and Impossible to win CPU
+* View your statistics
+
+![TicTacToe Example Image](Capture.JPG)
 
 ### 1.2 - States.csv
 

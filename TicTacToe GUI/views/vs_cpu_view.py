@@ -95,6 +95,9 @@ class VsCpuView(ttk.Frame):
         self.tictactoegrid.update_board( self.state.cpu_board )
         self.sideSection.update_stats( self.state )
 
+    def update_tooltip(self, tip):
+        self.tooltip['text'] = ' ' + tip
+
     def draw(self):
         self.update_all()
         self.grid(row=0, column=0, sticky=tk.N+tk.S+tk.E+tk.W)

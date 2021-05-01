@@ -10,6 +10,9 @@ import views.vs_cpu_view as V_vsCpu
 import views.stats_view as V_stats
 from model.state import State
 
+import pygame.mixer as mx
+
+
 
 ######################################
 #   Controller
@@ -40,6 +43,13 @@ class Controller(ttk.Frame):
         self.main_menu.draw()
         self.grid(sticky=tk.N + tk.S + tk.E + tk.W)
 
+        # Music
+        mx.init()
+        mx.music.load('./resources/music.mp3')
+        mx.music.play(loops=-1)
+        mx.music.set_volume(0.07)
+        self.key_sound = mx.Sound('./resources/Keyboard Sounds_Cherry Clear.mp3')
+
         # Initiate Playtime counting
         self.incrementPlayTime()
 
@@ -52,6 +62,9 @@ class Controller(ttk.Frame):
     def clear_practice_board(self):
         State.clear_board(self.state.practice_board)
         self.practice_view.update_all()
+
+    def play_sound(self):
+        self.key_sound.play()
 
     ############################################################
     # GUI Related Functions
@@ -123,6 +136,9 @@ class Controller(ttk.Frame):
 
         # 1 - Adds token to the tic tac toe board
         if not self.state.add_token(CONST.LOC_LOCAL_VS, index): return
+        token = 'X' if self.state.isOTurn else 'O'
+        self.practice_view.update_tooltip(f'{token} had made his move at grid {index}!')
+        self.play_sound()
         self.refresh_boards()
 
         # 2 - Checks for winning state, and set state, show winner if someone does win
@@ -130,6 +146,7 @@ class Controller(ttk.Frame):
         if winner is None: return
         self.state.game_set(CONST.LOC_LOCAL_VS, winner)
         Controller.show_practice_winner(winner)
+        self.practice_view.update_tooltip('A new game has begun')
         self.refresh_boards()
 
 
@@ -138,6 +155,8 @@ class Controller(ttk.Frame):
 
         # Adds token to the tic tac toe board
         if not self.state.add_token(CONST.LOC_LOCAL_CPU, index): return
+        self.vsCpu_view.update_tooltip(f'You had made your move at grid {index}!')
+        self.play_sound()
         self.refresh_boards()
 
         # Checks for winning
@@ -146,28 +165,36 @@ class Controller(ttk.Frame):
         if winner is not None:
             Controller.show_cpu_winner(winner, self.state.isPlayerFirst)
             self.state.game_set(CONST.LOC_LOCAL_CPU, winner)
+            self.vsCpu_view.update_tooltip(f'A new game has begin')
             self.refresh_boards()
 
             # After refresh, check if CPU moves first
             if not self.state.isPlayerFirst:
-                self.state.cpu_moves()
+                move = self.state.cpu_moves()
+                self.play_sound()
                 self.refresh_boards()
+                self.vsCpu_view.update_tooltip(f'CPU had made its move at grid {move}!')
                 return
 
         # Player moves but not yet deterministic. CPU moves and check state
-        self.state.cpu_moves()
+        move = self.state.cpu_moves()
+        self.play_sound()
         self.refresh_boards()
+        self.vsCpu_view.update_tooltip(f'CPU had made its move at grid {move}!')
         winner = State.checkWinningState(self.state.cpu_board)
         # Tie or CPU wins
         if winner is not None:
             Controller.show_cpu_winner(winner, self.state.isPlayerFirst)
             self.state.game_set(CONST.LOC_LOCAL_CPU, winner)
             self.refresh_boards()
+            self.vsCpu_view.update_tooltip('A new game has begin')
 
             # After refresh, check if CPU moves first
             if not self.state.isPlayerFirst:
-                self.state.cpu_moves()
+                move = self.state.cpu_moves()
+                self.play_sound()
                 self.refresh_boards()
+                self.vsCpu_view.update_tooltip(f'CPU had made its move at grid {move}!')
 
 
 
@@ -196,4 +223,5 @@ if __name__ == '__main__':
 
     root.protocol('WM_DELETE_WINDOW', window.saveBeforeQuit )
     root.title('TicTacToe')
+    root.iconbitmap('resources/tic-tac-toe.ico')
     root.mainloop()
